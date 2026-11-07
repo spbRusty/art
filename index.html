@@ -53,7 +53,16 @@ function say(s,ms=2300){$('message').textContent=s;$('message').classList.add('o
 function status(a,b){$('state').innerHTML=a+'<small>'+b+'</small>'}
 function addEcho(x,y,color='#f4b8d8'){echoes.push({x,y,r:4,a:.65,color});if(echoes.length>18)echoes.shift()}
 function offer(x,y){const colors=['#ffbd76','#8ee5df','#d5a7ff'];const color=colors[Math.floor(rand(0,colors.length))];foods.push({x,y,vx:rand(-.35,.35),vy:rand(-.35,.35),r:rand(5,8),color,life:1,wobble:rand(0,TAU),state:'drifting',age:0});if(foods.length>12)foods.shift();addEcho(x,y,color);status('FOOD DETECTED','SCENT TRAIL ACTIVE');say('A NUTRIENT HAS ENTERED THE FIELD')}
-function startle(x,y){const dx=animal.x-x,dy=animal.y-y,d=Math.hypot(dx,dy)||1;animal.vx+=dx/d*5.8;animal.vy+=dy/d*5.8;animal.fear=clamp(animal.fear+.72,0,1);animal.hit=1;animal.scale=.88;animal.sv=-.6;animal.mood='afraid';addEcho(x,y,'#f5a2bb');status('DEFENSIVE','UNWANTED CONTACT');say('IT RECOILS FROM YOUR TOUCH');for(const q of tentacles)q.reach=-.8}
+function startle(x,y){
+ const a=animal;
+ a.inspectUntil=t+5200;a.inspectStarted=t;a.inspectPhase=rand(0,TAU);
+ a.fear=Math.max(0,a.fear-.35);a.hit=1;a.roamX=0;a.edgeSide=null;
+ a.vx*=.35;a.vy*=.35;
+ addEcho(x,y,'#f5c0df');
+ status('INVESTIGATING','MOVING CLOSER TO OBSERVE');
+ say('IT MOVES CLOSER TO GET A BETTER LOOK');
+ for(const q of tentacles)q.reach=.35;
+}
 function pointer(e){const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,d=Math.hypot(x-animal.x,y-animal.y),bodyR=size()*(animal.scale*.94);if(d<bodyR*1.32){startle(x,y);return}offer(x,y)}
 canvas.addEventListener('pointerdown',e=>{if(active)pointer(e)},{passive:true});
 canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();animal.pointerX=e.clientX-r.left;animal.pointerY=e.clientY-r.top;animal.hasLook=true},{passive:true});
@@ -70,6 +79,7 @@ function moveAnimal(dt){
  a.hit=Math.max(0,a.hit-dt*.0015);
 
  let tx=a.x,ty=a.y,maxSpeed=0,paused=false;
+ const inspecting=t<(a.inspectUntil||0);
  if(target&&a.fear<.45){
    const dx=target.x-a.x,dy=target.y-a.y,d=Math.hypot(dx,dy)||1;
    const stop=u*.62;
@@ -125,10 +135,18 @@ function moveAnimal(dt){
  a.angle+=da*(1-Math.exp(-dt*.0011));
  a.av=da;
 
- const wantedScale=1-a.fear*.13+a.trust*.09;
+ const inspectPulse=inspecting?1.38+Math.sin((t-a.inspectStarted)*.0022)*.035:1;
+ const wantedScale=(1-a.fear*.13+a.trust*.09)*inspectPulse;
  a.scale+=(wantedScale-a.scale)*(1-Math.exp(-dt*.00028));
 
- if(a.edgeSide&&paused){
+ if(inspecting){
+   const phase=(t-a.inspectStarted)*.00115+a.inspectPhase;
+   const scanX=Math.sin(phase)*2.8+Math.sin(phase*.43)*.8;
+   const scanY=Math.sin(phase*.71+1.4)*2.1;
+   const gx=a.x+scanX*u,gy=a.y+scanY*u;
+   a.lookX+=(gx-a.lookX)*(1-Math.exp(-dt*.0018));
+   a.lookY+=(gy-a.lookY)*(1-Math.exp(-dt*.0018));
+ }else if(a.edgeSide&&paused){
    const outside={left:{x:-w*.15,y:a.y},right:{x:w*1.15,y:a.y},top:{x:a.x,y:-h*.15},bottom:{x:a.x,y:h*1.15}}[a.edgeSide];
    a.lookX+=(outside.x-a.lookX)*(1-Math.exp(-dt*.0015));
    a.lookY+=(outside.y-a.lookY)*(1-Math.exp(-dt*.0015));
@@ -214,7 +232,7 @@ const iris=ctx.createRadialGradient(lookX-u*.025,lookY-u*.04,1,lookX,lookY,u*.18
 if(a.fear>.2){ctx.strokeStyle='rgba(255,225,235,'+a.fear*.7+')';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,0,u*.26,u*.31,0,0,TAU);ctx.stroke()}
 ctx.restore()}
 function updateEchoes(dt){for(let i=echoes.length-1;i>=0;i--){const e=echoes[i];e.r+=dt*.045;e.a-=dt*.00035;if(e.a<=0){echoes.splice(i,1);continue}ctx.beginPath();ctx.ellipse(e.x,e.y,e.r,e.r*.7,0,0,TAU);ctx.strokeStyle=e.color+Math.floor(e.a*255).toString(16).padStart(2,'0');ctx.lineWidth=1;ctx.stroke()}}
-function mood(){const a=animal;if(a.fear>.48){a.mood='afraid';status('AFRAID','DISTANCE REQUESTED')}else if(a.target){a.mood='hunting';status('HUNTING','NUTRIENT TRACKED')}else if(a.hunger>.72){a.mood='hungry';status('SEARCHING','APPETITE: HIGH')}else if(a.trust>.4){a.mood='curious';status('CURIOUS','TOLERANCE INCREASING')}else{a.mood='watching';status('OBSERVING','MOTIVES UNKNOWN')}}
+function mood(){const a=animal;if(t<(a.inspectUntil||0)){a.mood='investigating';status('INVESTIGATING','TRYING TO LOOK BEHIND THE SCREEN')}else if(a.fear>.48){a.mood='afraid';status('AFRAID','DISTANCE REQUESTED')}else if(a.target){a.mood='hunting';status('HUNTING','NUTRIENT TRACKED')}else if(a.hunger>.72){a.mood='hungry';status('SEARCHING','APPETITE: HIGH')}else if(a.trust>.4){a.mood='curious';status('CURIOUS','TOLERANCE INCREASING')}else{a.mood='watching';status('OBSERVING','MOTIVES UNKNOWN')}}
 function frame(now){if(!active){if(!reduced)requestAnimationFrame(frame);return}const dt=Math.min(40,now-(last||now));last=now;t+=dt;background(dt);moveAnimal(dt);drawFood(dt);drawTentacles();drawBody();updateEchoes(dt);
 if(now-lastMood>1200){lastMood=now;mood()}const sec=Math.floor((now-sessionStart)/1000);$('session').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');
 if(!reduced)requestAnimationFrame(frame)}
