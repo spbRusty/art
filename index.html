@@ -72,9 +72,9 @@ function moveAnimal(dt){
  let tx=a.x,ty=a.y,maxSpeed=0,paused=false;
  if(target&&a.fear<.45){
    const dx=target.x-a.x,dy=target.y-a.y,d=Math.hypot(dx,dy)||1;
-   const stop=u*.78;
+   const stop=u*.62;
    const approach=Math.max(0,d-stop);
-   tx=target.x-dx/d*stop;ty=target.y-dy/d*stop;
+   if(d>stop){tx=target.x-dx/d*stop;ty=target.y-dy/d*stop;}else{tx=target.x;ty=target.y;}
    maxSpeed=Math.min(.072,.014+approach*.00042);
    target.state=d<u*2.5?'approaching':'tracking';
    a.roamPauseUntil=0;
@@ -116,6 +116,7 @@ function moveAnimal(dt){
  const speed=Math.hypot(a.vx,a.vy),cap=target?.075:(a.fear>.3?.055:.027);
  if(speed>cap){a.vx=a.vx/speed*cap;a.vy=a.vy/speed*cap;}
  a.x+=a.vx*dt;a.y+=a.vy*dt;
+ a.gait=(a.gait||0)+Math.hypot(a.vx,a.vy)*dt*.12;
  a.x=clamp(a.x,u*.78,w-u*.78);a.y=clamp(a.y,u*.82,h-u*.82);
 
  const moving=Math.hypot(a.vx,a.vy);
@@ -172,7 +173,7 @@ function drawTentacles(){
   ctx.beginPath();ctx.arc(ex,ey,q.thick*.62,0,TAU);ctx.fillStyle='rgba(220,180,218,.75)';ctx.fill();
  }
  // Six jointed walking legs. Alternating tripod gait makes every step readable.
- const gait=t*.0042+Math.min(1,Math.hypot(a.vx,a.vy)/.035)*t*.001;
+ const gait=a.gait||0;
  for(let i=0;i<legs.length;i++){
   const leg=legs[i],phase=gait+leg.phase,cycle=((phase/TAU)%1+1)%1;
   const swing=cycle<.42,step=swing?cycle/.42:(cycle-.42)/.58;
