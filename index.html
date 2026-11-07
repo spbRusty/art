@@ -58,7 +58,7 @@ function pointer(e){const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=
 canvas.addEventListener('pointerdown',e=>{if(active)pointer(e)},{passive:true});
 canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();animal.pointerX=e.clientX-r.left;animal.pointerY=e.clientY-r.top;animal.hasLook=true},{passive:true});
 canvas.addEventListener('pointerleave',()=>animal.hasLook=false,{passive:true});
-$('start').addEventListener('click',()=>{active=true;sessionStart=performance.now();$('intro').classList.add('hide');animal.x=w*.5;animal.y=h*.51;animal.hunger=.6;status('AWAKE','APPETITE: RISING');say('IT IS STUDYING YOU')});
+$('start').addEventListener('click',()=>{active=true;sessionStart=performance.now();animal.nextExploration=t+rand(9000,14000);$('intro').classList.add('hide');animal.x=w*.5;animal.y=h*.51;animal.hunger=.6;status('AWAKE','APPETITE: RISING');say('IT IS STUDYING YOU')});
 function background(dt){ctx.fillStyle='rgba(8,7,14,.24)';ctx.fillRect(0,0,w,h);const g=ctx.createRadialGradient(w*.5,h*.5,20,w*.5,h*.5,Math.max(w,h)*.7);g.addColorStop(0,'rgba(103,67,117,.11)');g.addColorStop(.55,'rgba(38,32,62,.05)');g.addColorStop(1,'rgba(4,4,10,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
 for(const m of motes){m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(t*.0002+m.p)*.025;if(m.x<0)m.x=w;if(m.x>w)m.x=0;if(m.y<0)m.y=h;if(m.y>h)m.y=0;ctx.beginPath();ctx.arc(m.x,m.y,m.r,0,TAU);ctx.fillStyle='rgba(205,177,218,.28)';ctx.fill()}}
 function chooseTarget(){let best=null,score=Infinity;for(const f of foods){if(f.state==='eaten')continue;const d=Math.hypot(f.x-animal.x,f.y-animal.y);const s=d*(f.color==='#ffbd76'?1:.93);if(s<score){score=s;best=f}}return best}
