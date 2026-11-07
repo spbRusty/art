@@ -16,4 +16,4 @@ Open `index.html` in a modern browser. No build step or dependencies are require
 
 ## Publish
 
-The site is a static page and can be hosted directly with GitHub Pages. In the repository, open **Settings → Pages**, choose **Deploy from a branch**, select **main** and **/(root)**, then save.
+The site is a static page and can be hosted directly with GitHub Pages. In the repository, open **Settings → Pages**, choose **GitHub Actions** as the deployment source. The included workflow publishes the root directory after each push to `main`.
