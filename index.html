@@ -135,9 +135,9 @@ function moveAnimal(dt){
  a.angle+=da*(1-Math.exp(-dt*.0011));
  a.av=da;
 
- const inspectPulse=inspecting?1.38+Math.sin((t-a.inspectStarted)*.0022)*.035:1;
+ const inspectPulse=inspecting?4.8+Math.sin((t-a.inspectStarted)*.0014)*.12:1;
  const wantedScale=(1-a.fear*.13+a.trust*.09)*inspectPulse;
- a.scale+=(wantedScale-a.scale)*(1-Math.exp(-dt*.00028));
+ a.scale+=(wantedScale-a.scale)*(1-Math.exp(-dt*(inspecting?.00165:.00042)));
 
  if(inspecting){
    const phase=(t-a.inspectStarted)*.00115+a.inspectPhase;
@@ -226,7 +226,7 @@ const core=ctx.createRadialGradient(-u*.18,-u*.2,u*.02,0,0,u*.64);core.addColorS
 // Internal branching vessels
 for(let k=0;k<9;k++){const ang=k/9*TAU+Math.sin(t*.0002+k)*.12;ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(Math.cos(ang+.3)*u*.18,Math.sin(ang+.3)*u*.16,Math.cos(ang)*u*.38,Math.sin(ang)*u*.3,Math.cos(ang)*u*.52,Math.sin(ang)*u*.4);ctx.strokeStyle=k%2?'rgba(255,220,211,.32)':'rgba(105,231,216,.34)';ctx.lineWidth=1.3;ctx.stroke()}
 // Central sensory lens
-const gazeX=a.edgeSide?clamp((a.lookX-a.x)*.22,-u*.19,u*.19):(a.hasLook?clamp((a.lookX-a.x)*.035,-u*.08,u*.08):Math.sin(t*.0003)*u*.025),gazeY=a.edgeSide?clamp((a.lookY-a.y)*.22,-u*.19,u*.19):(a.hasLook?clamp((a.lookY-a.y)*.035,-u*.07,u*.07):Math.cos(t*.00024)*u*.025),lookX=gazeX,lookY=gazeY;
+const inspecting=t<(a.inspectUntil||0),gazeX=inspecting?clamp((a.lookX-a.x)*.22,-u*.3,u*.3):(a.edgeSide?clamp((a.lookX-a.x)*.22,-u*.19,u*.19):(a.hasLook?clamp((a.lookX-a.x)*.035,-u*.08,u*.08):Math.sin(t*.0003)*u*.025)),gazeY=inspecting?clamp((a.lookY-a.y)*.22,-u*.3,u*.3):(a.edgeSide?clamp((a.lookY-a.y)*.22,-u*.19,u*.19):(a.hasLook?clamp((a.lookY-a.y)*.035,-u*.07,u*.07):Math.cos(t*.00024)*u*.025)),lookX=gazeX,lookY=gazeY;
 ctx.beginPath();ctx.ellipse(0,0,u*.19,u*.24*(blinkNow?.12:1),0,0,TAU);ctx.fillStyle='rgba(17,16,31,.9)';ctx.fill();ctx.strokeStyle='rgba(255,213,221,.7)';ctx.lineWidth=2;ctx.stroke();
 const iris=ctx.createRadialGradient(lookX-u*.025,lookY-u*.04,1,lookX,lookY,u*.18);iris.addColorStop(0,'#fff4db');iris.addColorStop(.16,'#ffc2d8');iris.addColorStop(.42,'#e88fc2');iris.addColorStop(.72,'#6bb9b5');iris.addColorStop(1,'#24364b');ctx.beginPath();ctx.ellipse(lookX,lookY,u*.145,u*.185*(blinkNow?.12:1),0,0,TAU);ctx.fillStyle=iris;ctx.shadowBlur=24;ctx.shadowColor='#ffacd3';ctx.fill();ctx.shadowBlur=0;ctx.beginPath();ctx.ellipse(lookX+u*.025,lookY+u*.025,u*.045,u*.095*(blinkNow?.12:1),-.2,0,TAU);ctx.fillStyle='#21162b';ctx.fill();ctx.beginPath();ctx.arc(lookX-u*.04,lookY-u*.07,u*.025,0,TAU);ctx.fillStyle='#fff';ctx.fill();
 if(a.fear>.2){ctx.strokeStyle='rgba(255,225,235,'+a.fear*.7+')';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,0,u*.26,u*.31,0,0,TAU);ctx.stroke()}
