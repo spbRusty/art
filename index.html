@@ -48,7 +48,7 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const animal={x:0,y:0,vx:0,vy:0,angle:0,av:0,scale:1,sv:0,hunger:.48,fear:0,trust:0,mood:'watching',target:null,blink:0,hit:0,energy:1,edgeSide:null,edgePauseUntil:0,nextExploration:0,lookX:0,lookY:0};
 const center=()=>({x:w*.5,y:h*.51}),size=()=>Math.min(w,h)*.205;
 function resize(){const r=stage.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(!animal.x){animal.x=w*.5;animal.y=h*.51}animal.x=clamp(animal.x,size(),w-size());animal.y=clamp(animal.y,size(),h-size());seed();draw()}
-function seed(){tentacles=Array.from({length:11},(_,i)=>({a:i/11*TAU+rand(-.12,.12),phase:rand(0,TAU),length:rand(.78,1.45),curl:rand(-.8,.8),thick:rand(2.5,6),lag:rand(.7,1.4),reach:0}));legs=Array.from({length:8},(_,i)=>({a:Math.PI*.16+i/7*Math.PI*.68,phase:i*.83+rand(-.2,.2),length:rand(.9,1.18),step:rand(0,TAU),footX:0,footY:0,blink:0}));motes=[];for(let i=0;i<65;i++)motes.push({x:rand(0,w),y:rand(0,h),vx:rand(-.12,.12),vy:rand(-.12,.12),r:rand(.5,2),p:rand(0,TAU)})}
+function seed(){tentacles=Array.from({length:11},(_,i)=>({a:i/11*TAU+rand(-.12,.12),phase:rand(0,TAU),length:rand(.78,1.45),curl:rand(-.8,.8),thick:rand(2.5,6),lag:rand(.7,1.4),reach:0}));legs=Array.from({length:6},(_,i)=>({a:i/6*TAU,phase:i%2?Math.PI:0,length:rand(.9,1.18),step:rand(0,TAU)}));motes=[];for(let i=0;i<65;i++)motes.push({x:rand(0,w),y:rand(0,h),vx:rand(-.12,.12),vy:rand(-.12,.12),r:rand(.5,2),p:rand(0,TAU)})}
 function say(s,ms=2300){$('message').textContent=s;$('message').classList.add('on');clearTimeout(msgTimer);msgTimer=setTimeout(()=>$('message').classList.remove('on'),ms)}
 function status(a,b){$('state').innerHTML=a+'<small>'+b+'</small>'}
 function addEcho(x,y,color='#f4b8d8'){echoes.push({x,y,r:4,a:.65,color});if(echoes.length>18)echoes.shift()}
@@ -64,44 +64,86 @@ for(const m of motes){m.x+=m.vx*dt;m.y+=m.vy*dt+Math.sin(t*.0002+m.p)*.025;if(m.
 function chooseTarget(){let best=null,score=Infinity;for(const f of foods){if(f.state==='eaten')continue;const d=Math.hypot(f.x-animal.x,f.y-animal.y);const s=d*(f.color==='#ffbd76'?1:.93);if(s<score){score=s;best=f}}return best}
 function moveAnimal(dt){
  const a=animal,u=size(),target=chooseTarget();
- a.target=target;a.hunger=clamp(a.hunger+dt*.000012,0,1);a.fear=Math.max(0,a.fear-dt*.00013);a.hit=Math.max(0,a.hit-dt*.002);
- let tx=w*.5+Math.sin(t*.00012)*w*.075,ty=h*.51+Math.cos(t*.0001)*h*.065;
- if(target&&a.fear<.45){const d=Math.hypot(target.x-a.x,target.y-a.y)||1;tx=target.x-(target.x-a.x)/d*u*.9;ty=target.y-(target.y-a.y)/d*u*.9;target.state=d<u*2.4?'approaching':'scented';}
- else if(a.fear>.25){tx=w*.5+Math.sin(t*.00028)*w*.12;ty=h*.5+Math.cos(t*.00025)*h*.12;}
- // Иногда организм самостоятельно исследует край поля, затем останавливается и наблюдает.
- if(!target&&a.fear<.3&&t>a.nextExploration&&!a.edgeSide){
-   const sides=['left','right','top','bottom'];a.edgeSide=sides[Math.floor(Math.random()*4)];
-   a.edgePauseUntil=0;a.nextExploration=t+rand(14500,22000);
- }
- if(a.edgeSide&&!target&&a.fear<.3){
-   const pad=u*.88;
-   tx=a.edgeSide==='left'?pad:a.edgeSide==='right'?w-pad:clamp(a.x,pad,w-pad);
-   ty=a.edgeSide==='top'?pad:a.edgeSide==='bottom'?h-pad:clamp(a.y,pad,h-pad);
-   const near=Math.hypot(tx-a.x,ty-a.y)<u*.32;
-   if(near){a.edgePauseUntil ||= t+rand(2600,4300);tx=a.x;ty=a.y;
-     const outside={left:{x:-w*.12,y:a.y},right:{x:w*1.12,y:a.y},top:{x:a.x,y:-h*.12},bottom:{x:a.x,y:h*1.12}}[a.edgeSide];
-     a.lookX=outside.x;a.lookY=outside.y;
-     if(t>a.edgePauseUntil){a.edgeSide=null;a.edgePauseUntil=0;}
+ a.target=target;
+ a.hunger=clamp(a.hunger+dt*.000012,0,1);
+ a.fear=Math.max(0,a.fear-dt*.00011);
+ a.hit=Math.max(0,a.hit-dt*.0015);
+
+ let tx=a.x,ty=a.y,maxSpeed=0,paused=false;
+ if(target&&a.fear<.45){
+   const dx=target.x-a.x,dy=target.y-a.y,d=Math.hypot(dx,dy)||1;
+   const stop=u*.78;
+   const approach=Math.max(0,d-stop);
+   tx=target.x-dx/d*stop;ty=target.y-dy/d*stop;
+   maxSpeed=Math.min(.072,.014+approach*.00042);
+   target.state=d<u*2.5?'approaching':'tracking';
+   a.roamPauseUntil=0;
+ }else if(a.fear>.3){
+   const dx=a.x-w*.5,dy=a.y-h*.5,d=Math.hypot(dx,dy)||1;
+   tx=clamp(a.x+dx/d*u*2,u*.8,w-u*.8);
+   ty=clamp(a.y+dy/d*u*2,u*.8,h-u*.8);
+   maxSpeed=.052;
+ }else{
+   if(!a.roamX||t>a.nextExploration){
+     const pad=u*1.05,edge=Math.random()<.32;
+     if(edge){
+       const side=Math.floor(Math.random()*4);
+       a.roamX=side===0?pad:side===1?w-pad:rand(pad,w-pad);
+       a.roamY=side===2?pad:side===3?h-pad:rand(pad,h-pad);
+       a.edgeSide=side===0?'left':side===1?'right':side===2?'top':'bottom';
+     }else{
+       a.roamX=rand(w*.18,w*.82);a.roamY=rand(h*.2,h*.8);a.edgeSide=null;
+     }
+     a.nextExploration=t+rand(8500,13500);
+     a.roamPauseUntil=0;
    }
+   tx=a.roamX;ty=a.roamY;
+   const d=Math.hypot(tx-a.x,ty-a.y);
+   if(d<u*.24){
+     if(!a.roamPauseUntil)a.roamPauseUntil=t+rand(1800,3200);
+     paused=t<a.roamPauseUntil;
+     if(!paused){a.roamX=0;a.edgeSide=null;a.nextExploration=t+500;}
+   }
+   maxSpeed=paused?0:Math.min(.025,.009+d*.00009);
  }
  const dx=tx-a.x,dy=ty-a.y,d=Math.hypot(dx,dy)||1;
- const maxSpeed=target?Math.min(.043,.018+d*.000025):.026;
- const desiredVx=dx/d*maxSpeed,desiredVy=dy/d*maxSpeed;
- const response=1-Math.exp(-dt*(target?.00072:.00048));
+ const desiredVx=paused?0:dx/d*maxSpeed,desiredVy=paused?0:dy/d*maxSpeed;
+ const response=1-Math.exp(-dt*(target?.0021:.00105));
  a.vx+=(desiredVx-a.vx)*response;a.vy+=(desiredVy-a.vy)*response;
- a.vx+=Math.sin(t*.00023)*.000018*dt;a.vy+=Math.cos(t*.00019)*.000015*dt;
- const speed=Math.hypot(a.vx,a.vy),cap=target?.046:.029;if(speed>cap){a.vx=a.vx/speed*cap;a.vy=a.vy/speed*cap;}
+ // A little body momentum, not random drifting.
+ a.vx+=Math.sin(t*.00017)*.000006*dt;
+ a.vy+=Math.cos(t*.00015)*.000005*dt;
+ const speed=Math.hypot(a.vx,a.vy),cap=target?.075:(a.fear>.3?.055:.027);
+ if(speed>cap){a.vx=a.vx/speed*cap;a.vy=a.vy/speed*cap;}
  a.x+=a.vx*dt;a.y+=a.vy*dt;
  a.x=clamp(a.x,u*.78,w-u*.78);a.y=clamp(a.y,u*.82,h-u*.82);
- const desired=Math.atan2(dy,dx)+Math.PI/2;let da=((desired-a.angle+Math.PI*3)%(TAU))-Math.PI;
- a.angle+=da*(1-Math.exp(-dt*.00042));a.av=da;
+
+ const moving=Math.hypot(a.vx,a.vy);
+ const heading=moving>.002?Math.atan2(a.vy,a.vx)+Math.PI/2:a.angle;
+ let da=((heading-a.angle+Math.PI*3)%TAU)-Math.PI;
+ a.angle+=da*(1-Math.exp(-dt*.0011));
+ a.av=da;
+
  const wantedScale=1-a.fear*.13+a.trust*.09;
  a.scale+=(wantedScale-a.scale)*(1-Math.exp(-dt*.00028));
- // Gaze follows the pointer, but at the edge it deliberately looks beyond the visible canvas.
- if(!a.edgeSide&&a.hasLook){a.lookX+=(a.pointerX-a.lookX)*(1-Math.exp(-dt*.004));a.lookY+=(a.pointerY-a.lookY)*(1-Math.exp(-dt*.004));}
- if(target&&Math.hypot(target.x-a.x,target.y-a.y)<u*.53){
-   target.state='eaten';a.hunger=Math.max(0,a.hunger-.28);a.energy=clamp(a.energy+.22,0,1);a.trust=clamp(a.trust+.08,0,1);a.scale+=.035;
-   addEcho(target.x,target.y,target.color);say('NUTRIENT ABSORBED');status('FEEDING','ENERGY RESTORED');
+
+ if(a.edgeSide&&paused){
+   const outside={left:{x:-w*.15,y:a.y},right:{x:w*1.15,y:a.y},top:{x:a.x,y:-h*.15},bottom:{x:a.x,y:h*1.15}}[a.edgeSide];
+   a.lookX+=(outside.x-a.lookX)*(1-Math.exp(-dt*.0015));
+   a.lookY+=(outside.y-a.lookY)*(1-Math.exp(-dt*.0015));
+ }else if(a.hasLook){
+   a.lookX+=(a.pointerX-a.lookX)*(1-Math.exp(-dt*.003));
+   a.lookY+=(a.pointerY-a.lookY)*(1-Math.exp(-dt*.003));
+ }else{
+   a.lookX+=(a.x+Math.cos(t*.00031)*u-a.lookX)*(1-Math.exp(-dt*.0007));
+   a.lookY+=(a.y+Math.sin(t*.00027)*u*.5-a.lookY)*(1-Math.exp(-dt*.0007));
+ }
+
+ if(target&&Math.hypot(target.x-a.x,target.y-a.y)<u*.72){
+   target.state='eaten';a.hunger=Math.max(0,a.hunger-.28);
+   a.energy=clamp(a.energy+.22,0,1);a.trust=clamp(a.trust+.08,0,1);
+   a.scale+=.035;addEcho(target.x,target.y,target.color);
+   say('NUTRIENT ABSORBED');status('FEEDING','ENERGY RESTORED');
    for(let i=0;i<12;i++)motes.push({x:target.x,y:target.y,vx:rand(-.7,.7),vy:rand(-.7,.7),r:rand(1,2),p:rand(0,TAU)});
  }
  foods=foods.filter(f=>f.state!=='eaten'&&f.life>0);
@@ -110,33 +152,50 @@ function drawFood(dt){for(const f of foods){f.age+=dt;f.life-=dt*.000012;f.wobbl
 function drawTentacles(){
  const a=animal,u=size();
  ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.angle);ctx.scale(a.scale,a.scale);
- // Fine sensory feelers: flexible, independently delayed and responsive to food.
+ // Flexible sensory tentacles: they orient toward food and recoil when startled.
  for(let i=0;i<tentacles.length;i++){
-  const q=tentacles[i],angle=q.a+Math.sin(t*.00016+q.phase)*.105+Math.sin(t*.00009*q.lag)*.055;
-  const reach=u*q.length*(.88+Math.sin(t*.00024+q.phase)*.09)*(1+q.reach*.32);
-  const dx=Math.cos(angle),dy=Math.sin(angle),bend=Math.sin(t*.00031+q.phase)*reach*.13;
+  const q=tentacles[i];
+  const food=a.target;
+  const foodAngle=food?Math.atan2(food.y-a.y,food.x-a.x)-a.angle:0;
+  let da=((foodAngle-q.a+Math.PI*3)%TAU)-Math.PI;
+  const orient=food?clamp(da,-.65,.65)*.18:0;
+  const angle=q.a+orient+Math.sin(t*.00019+q.phase)*.075+Math.sin(t*.00011*q.lag)*.035;
+  const reach=u*q.length*(.9+Math.sin(t*.00025+q.phase)*.075)*(1+q.reach*.25);
+  const dx=Math.cos(angle),dy=Math.sin(angle),bend=Math.sin(t*.00032+q.phase)*reach*.11;
   const ex=dx*reach,ey=dy*reach*.8;
   ctx.beginPath();ctx.moveTo(dx*u*.34,dy*u*.29);
   ctx.bezierCurveTo(dx*reach*.38-bend*.25,dy*reach*.4+bend*.2,dx*reach*.72+bend*.5,dy*reach*.68-bend*.35,ex,ey);
-  const grad=ctx.createLinearGradient(dx*u*.3,dy*u*.3,ex,ey);grad.addColorStop(0,'rgba(236,165,204,.86)');grad.addColorStop(.5,'rgba(173,130,194,.72)');grad.addColorStop(1,'rgba(101,202,198,.35)');
-  ctx.strokeStyle=grad;ctx.lineWidth=q.thick*(1+Math.sin(t*.0007+q.phase)*.1);ctx.lineCap='round';ctx.shadowBlur=12;ctx.shadowColor='#d68dbd';ctx.stroke();ctx.shadowBlur=0;
-  ctx.beginPath();ctx.arc(ex,ey,q.thick*.62,0,TAU);ctx.fillStyle='rgba(220,180,218,.7)';ctx.fill();
+  const grad=ctx.createLinearGradient(dx*u*.3,dy*u*.3,ex,ey);
+  grad.addColorStop(0,'rgba(236,165,204,.9)');grad.addColorStop(.5,'rgba(173,130,194,.76)');grad.addColorStop(1,'rgba(101,202,198,.4)');
+  ctx.strokeStyle=grad;ctx.lineWidth=q.thick*(1+Math.sin(t*.0007+q.phase)*.1);
+  ctx.lineCap='round';ctx.shadowBlur=12;ctx.shadowColor='#d68dbd';ctx.stroke();ctx.shadowBlur=0;
+  ctx.beginPath();ctx.arc(ex,ey,q.thick*.62,0,TAU);ctx.fillStyle='rgba(220,180,218,.75)';ctx.fill();
  }
- // Eight articulated walking limbs, inspired by segmented arthropod locomotion.
+ // Six jointed walking legs. Alternating tripod gait makes every step readable.
+ const gait=t*.0042+Math.min(1,Math.hypot(a.vx,a.vy)/.035)*t*.001;
  for(let i=0;i<legs.length;i++){
-  const leg=legs[i],phase=t*.00042+leg.phase,side=Math.sin(phase),lift=Math.max(0,Math.cos(phase))*.12*u;
-  const baseA=leg.a+Math.sin(phase)*.045, bx=Math.cos(baseA)*u*.37,by=Math.sin(baseA)*u*.31;
-  const reach=u*leg.length, footAngle=baseA+(side*.18);
-  const fx=Math.cos(footAngle)*reach*1.55+Math.cos(phase)*u*.12;
-  const fy=Math.sin(footAngle)*reach*1.28-lift;
-  const j1x=bx+Math.cos(baseA-.5)*reach*.48,j1y=by+Math.sin(baseA-.5)*reach*.42;
-  const j2x=bx+Math.cos(baseA+.22)*reach*.92,j2y=by+Math.sin(baseA+.22)*reach*.78-lift*.35;
-  const fg=ctx.createLinearGradient(bx,by,fx,fy);fg.addColorStop(0,'rgba(239,181,210,.88)');fg.addColorStop(.55,'rgba(175,143,202,.82)');fg.addColorStop(1,'rgba(108,207,199,.72)');
-  ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='rgba(12,12,25,.45)';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(j1x,j1y);ctx.lineTo(j2x,j2y);ctx.lineTo(fx,fy);ctx.stroke();
-  ctx.strokeStyle=fg;ctx.lineWidth=5.4;ctx.shadowBlur=10;ctx.shadowColor='#bd8fc7';ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(j1x,j1y);ctx.lineTo(j2x,j2y);ctx.lineTo(fx,fy);ctx.stroke();ctx.shadowBlur=0;
-  for(const p of [[j1x,j1y,3.4],[j2x,j2y,2.8]]){ctx.beginPath();ctx.arc(p[0],p[1],p[2],0,TAU);ctx.fillStyle='#d9b4d5';ctx.fill();ctx.strokeStyle='rgba(255,231,239,.65)';ctx.lineWidth=1;ctx.stroke();}
-  ctx.beginPath();ctx.ellipse(fx,fy,5.5,3.1,footAngle,0,TAU);ctx.fillStyle='rgba(135,222,211,.82)';ctx.fill();
-  ctx.beginPath();ctx.arc(fx,fy,1.5,0,TAU);ctx.fillStyle='#fff0e8';ctx.fill();
+  const leg=legs[i],phase=gait+leg.phase,cycle=((phase/TAU)%1+1)%1;
+  const swing=cycle<.42,step=swing?cycle/.42:(cycle-.42)/.58;
+  const stride=swing?(-Math.cos(step*Math.PI)*.5+.5):(.5-step);
+  const lift=swing?Math.sin(step*Math.PI)*u*.2:0;
+  const side=Math.cos(leg.a),forward=Math.sin(leg.a);
+  const bx=side*u*.31,by=forward*u*.29;
+  const spread=u*(.8+leg.length*.18);
+  const fx=side*spread+side*stride*u*.36;
+  const fy=forward*spread+forward*stride*u*.26-lift;
+  const jx=side*u*.66+side*stride*u*.12;
+  const jy=forward*u*.57+forward*stride*u*.09-lift*.35;
+  const kx=side*u*.47+side*stride*u*.06;
+  const ky=forward*u*.39+forward*stride*u*.05;
+  ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(kx,ky);ctx.lineTo(jx,jy);ctx.lineTo(fx,fy);
+  ctx.strokeStyle='rgba(10,10,23,.6)';ctx.lineWidth=9;ctx.stroke();
+  const grad=ctx.createLinearGradient(bx,by,fx,fy);
+  grad.addColorStop(0,'rgba(244,190,216,.96)');grad.addColorStop(.55,'rgba(174,143,203,.9)');grad.addColorStop(1,'rgba(112,215,204,.86)');
+  ctx.strokeStyle=grad;ctx.lineWidth=5.5;ctx.shadowBlur=11;ctx.shadowColor='#bd8fc7';ctx.stroke();ctx.shadowBlur=0;
+  for(const p of [[kx,ky,3.5],[jx,jy,3]]){ctx.beginPath();ctx.arc(p[0],p[1],p[2],0,TAU);ctx.fillStyle='#e4bfdc';ctx.fill();ctx.strokeStyle='rgba(255,235,243,.8)';ctx.lineWidth=1;ctx.stroke();}
+  ctx.beginPath();ctx.ellipse(fx,fy,6,3.4,leg.a,0,TAU);ctx.fillStyle='rgba(132,226,213,.92)';ctx.fill();
+  ctx.beginPath();ctx.arc(fx,fy,1.6,0,TAU);ctx.fillStyle='#fff4ed';ctx.fill();
  }
  ctx.restore();
 }
