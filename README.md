@@ -1,19 +1,21 @@
-# MYCELIUM — Synthetic Life Study 01
+# UNKNOWN LIFEFORM — Specimen 09
 
-An interactive generative-art experiment: a fictional digital organism growing between biological patterns and computational rules.
+An interactive generative-art encounter with a fictional artificial organism. The specimen observes the visitor, responds to touch, develops satellite organisms and changes its morphology over time.
 
 ## Run locally
 
-Open `index.html` in a modern browser. No build step or dependencies are required.
+Open `index.html` in a modern browser. No build step, server, or JavaScript dependencies are required.
 
 ## Interaction
 
-- Move the pointer through the field to disturb the organism.
-- Click to introduce new growth points.
-- Switch between Growth, Pulse and Drift observation modes.
-- Adjust nutrient flow, humidity and mutation rate on wider screens.
-- Optional generated tones are disabled by default.
+- Move slowly around the organism. Its sensory organs follow the pointer.
+- Tap or click the field to send a signal.
+- Try three taps with an even rhythm. A matching rhythm triggers a response and can cause the organism to reproduce or mutate.
+- Stay in the habitat. The specimen develops autonomously, releases new organisms and occasionally produces unpredictable events.
+- Works with mouse, touch and narrow mobile screens.
+
+The behavior is a fictional simulation, not a biological model. Session duration and interactions influence the encounter; no account or backend is required.
 
 ## Publish
 
-The site is a static page and can be hosted directly with GitHub Pages. In the repository, open **Settings → Pages**, choose **GitHub Actions** as the deployment source. The included workflow publishes the root directory after each push to `main`.
+This is a static page. GitHub Actions deploys the repository root to GitHub Pages after pushes to `main`. In **Settings → Pages**, choose **GitHub Actions** as the deployment source.
