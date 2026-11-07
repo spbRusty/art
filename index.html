@@ -13,7 +13,7 @@
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper)}
 body{font-family:var(--sans);touch-action:pan-y}
 #stage{position:relative;width:100%;height:100%;height:100svh;min-height:420px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#14221b 0%,#09100c 42%,#050807 78%)}
-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 #grain{position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");mix-blend-mode:screen}
 header{position:absolute;z-index:3;top:0;left:0;right:0;padding:clamp(18px,3vw,34px) clamp(18px,4vw,48px);display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
 .brand{font:10px var(--mono);letter-spacing:.19em;color:#d6e0d3}
