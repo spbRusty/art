@@ -2,112 +2,103 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101310">
-<meta name="description" content="MYCELIUM — an experimental digital ecosystem. An artificial organism growing between code and biology.">
-<title>MYCELIUM — Synthetic Life Study 01</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050807">
+<meta name="description" content="UNKNOWN LIFEFORM — an encounter with an artificial organism.">
+<title>UNKNOWN LIFEFORM / specimen 09</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap');
-:root{--bg:#101310;--panel:#171c17;--line:#30392f;--text:#e4e8d9;--muted:#879080;--acid:#c7f36b;--orange:#e98c62;--mono:'DM Mono',monospace;--sans:'Manrope',sans-serif}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);overflow:hidden}
-body:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E")}
-button{font:inherit;color:inherit}.shell{height:100%;display:grid;grid-template-rows:66px 1fr 42px;position:relative}
-header{display:flex;align-items:center;justify-content:space-between;padding:0 34px;border-bottom:1px solid var(--line);z-index:3;background:#101310d9}
-.brand{display:flex;align-items:center;gap:13px;font:11px var(--mono);letter-spacing:.17em}.mark{width:22px;height:22px;border:1px solid var(--acid);border-radius:50%;position:relative}.mark:before,.mark:after{content:"";position:absolute;background:var(--acid);border-radius:50%}.mark:before{width:5px;height:5px;top:4px;left:4px}.mark:after{width:3px;height:3px;bottom:4px;right:4px}
-.header-meta{display:flex;gap:28px;color:var(--muted);font:10px var(--mono);letter-spacing:.12em}.live{color:var(--acid)}.live:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acid);margin:0 8px 1px 0;box-shadow:0 0 10px var(--acid)}
-main{display:grid;grid-template-columns:260px minmax(0,1fr) 270px;min-height:0}
-aside{padding:34px 27px;border-right:1px solid var(--line);position:relative;z-index:2;background:#101310b8}.right{border-right:0;border-left:1px solid var(--line)}
-.eyebrow{font:10px var(--mono);letter-spacing:.16em;color:var(--muted);text-transform:uppercase}.title{font-size:clamp(29px,3vw,44px);font-weight:300;letter-spacing:-.065em;line-height:1;margin:22px 0 13px}.title em{font-style:normal;color:var(--acid)}.sub{font-size:12px;line-height:1.8;color:#a4ad9d;max-width:210px}
-.rule{height:1px;background:var(--line);margin:29px 0}.section-label{font:10px var(--mono);color:var(--muted);letter-spacing:.13em;margin-bottom:16px}
-.nav{display:grid;gap:7px}.nav button{border:1px solid transparent;background:transparent;text-align:left;padding:11px 12px;color:#929b8b;font:11px var(--mono);letter-spacing:.04em;cursor:pointer;transition:.2s}.nav button span{color:#566052;margin-right:13px}.nav button:hover,.nav button.active{border-color:#394535;background:#1a2118;color:var(--acid)}
-.caption{font-size:11px;line-height:1.8;color:#899385}.caption strong{color:#d5ddc9;font-weight:500}
-.center{position:relative;min-width:0;min-height:0;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#1d281b 0%,#111711 39%,#101310 76%)}
-#world{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
-.center-top{position:absolute;top:26px;left:30px;right:30px;display:flex;justify-content:space-between;pointer-events:none;font:9px var(--mono);letter-spacing:.14em;color:#788272}
-.center-bottom{position:absolute;bottom:25px;left:30px;right:30px;display:flex;justify-content:space-between;align-items:end;pointer-events:none}
-.coord{font:10px var(--mono);color:#7c8875;line-height:1.8}.hint{font:9px var(--mono);color:#7c8875;letter-spacing:.08em;text-align:right}
-.specimen{font-size:22px;font-weight:300;letter-spacing:-.04em}.specimen small{display:block;font:9px var(--mono);color:var(--muted);letter-spacing:.13em;margin-top:6px}
-.readout{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.readout div{border-top:1px solid var(--line);padding-top:10px}.readout b{display:block;font:18px var(--mono);font-weight:400;color:var(--acid)}.readout span{font:9px var(--mono);color:var(--muted);letter-spacing:.1em}
-.control{margin:20px 0}.control-head{display:flex;justify-content:space-between;font:10px var(--mono);color:#b7c0ae;margin-bottom:11px}.control-head output{color:var(--acid)}input[type=range]{width:100%;accent-color:var(--acid);height:3px;cursor:pointer}
-.actions{display:flex;gap:8px;margin-top:24px}.action{background:transparent;border:1px solid #46503f;padding:10px 12px;font:9px var(--mono);letter-spacing:.1em;color:#bdc6b3;cursor:pointer;transition:.2s}.action:hover{background:var(--acid);color:#151a12;border-color:var(--acid)}.action.primary{border-color:var(--acid);color:var(--acid)}
-footer{display:flex;align-items:center;justify-content:space-between;padding:0 34px;border-top:1px solid var(--line);font:9px var(--mono);color:#778071;letter-spacing:.1em;z-index:3}.foot-right{display:flex;gap:22px}
-.toast{position:absolute;top:65px;left:50%;transform:translate(-50%,-8px);opacity:0;pointer-events:none;padding:9px 14px;border:1px solid #65794a;background:#182017;color:var(--acid);font:10px var(--mono);letter-spacing:.08em;transition:.3s;z-index:4}.toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:900px){main{grid-template-columns:210px minmax(0,1fr)}.right{display:none}.title{font-size:34px}aside{padding:28px 20px}}
-@media(max-width:620px){html,body{overflow:auto}.shell{min-height:100%;height:auto;grid-template-rows:56px minmax(0,1fr) 38px}header{padding:0 17px}.header-meta{gap:10px;font-size:8px}.header-meta span:nth-child(2){display:none}main{display:flex;flex-direction:column;min-height:calc(100dvh - 94px)}aside.left{border-right:0;border-bottom:1px solid var(--line);padding:19px 20px;background:#101310}.title{font-size:29px;margin:10px 0 7px}.sub{max-width:none;font-size:11px}.rule,.nav,.caption{display:none}.center{min-height:58vh;flex:1}.center-top{top:15px;left:17px;right:17px}.center-bottom{bottom:17px;left:17px;right:17px}footer{padding:0 16px;font-size:8px}.foot-right{gap:10px}.readout{margin-top:12px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap');
+:root{color-scheme:dark;--ink:#050807;--paper:#d9e2d5;--dim:#718078;--acid:#c7ff9a;--mono:'DM Mono',monospace;--sans:'Space Grotesk',sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper)}
+body{font-family:var(--sans);touch-action:pan-y}
+#stage{position:relative;width:100%;height:100%;height:100svh;min-height:420px;overflow:hidden;background:radial-gradient(ellipse at 50% 48%,#14221b 0%,#09100c 42%,#050807 78%)}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+#grain{position:absolute;inset:0;pointer-events:none;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");mix-blend-mode:screen}
+header{position:absolute;z-index:3;top:0;left:0;right:0;padding:clamp(18px,3vw,34px) clamp(18px,4vw,48px);display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+.brand{font:10px var(--mono);letter-spacing:.19em;color:#d6e0d3}
+.brand span{display:block;margin-top:7px;color:#66766b;font-size:9px;letter-spacing:.12em}
+#signal{font:9px var(--mono);letter-spacing:.13em;color:#819387;text-align:right}
+#signal:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#a8ff8b;box-shadow:0 0 12px #a8ff8b;margin:0 9px 1px 0;animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.25}}
+footer{position:absolute;z-index:3;bottom:0;left:0;right:0;padding:22px clamp(18px,4vw,48px) max(22px,env(safe-area-inset-bottom));display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none}
+.instruction{font:9px var(--mono);letter-spacing:.12em;line-height:1.8;color:#829087;max-width:210px}
+#state{font:9px var(--mono);letter-spacing:.13em;color:#b9cbbd;text-align:right}
+#state small{display:block;color:#627268;margin-top:7px;font-size:8px}
+#hint{position:absolute;z-index:4;left:50%;top:72%;transform:translate(-50%,-50%);font:9px var(--mono);letter-spacing:.16em;color:#c5e6c4;white-space:nowrap;opacity:0;pointer-events:none;text-shadow:0 0 15px #8bffa0;transition:opacity .5s}
+#hint.show{opacity:.85}
+#reveal{position:absolute;inset:0;z-index:2;display:grid;place-items:center;background:#050807;transition:opacity 1.4s ease,visibility 1.4s}
+#reveal.out{opacity:0;visibility:hidden;pointer-events:none}
+.intro{text-align:center;padding:24px}
+.intro .over{font:9px var(--mono);letter-spacing:.3em;color:#789084;margin-bottom:22px}
+.intro h1{font-weight:400;font-size:clamp(36px,8vw,76px);line-height:.94;letter-spacing:-.07em;margin:0;color:#e2eee0}
+.intro h1 em{font-style:normal;color:#9acb9c}
+.intro p{font:10px/1.8 var(--mono);letter-spacing:.08em;color:#7c8d82;margin:24px auto 30px;max-width:300px}
+#enter{appearance:none;border:1px solid #647d68;background:transparent;color:#d9ecd7;padding:14px 25px;font:10px var(--mono);letter-spacing:.19em;cursor:pointer;min-height:46px;transition:.25s}
+#enter:active{background:#baff9b;color:#071009}
+#enter:hover{border-color:#c7ff9a;box-shadow:0 0 24px #9bff8a22}
+@media(max-width:600px){header{padding-top:max(18px,env(safe-area-inset-top))}footer{padding-bottom:max(20px,env(safe-area-inset-bottom))}.instruction{max-width:170px;font-size:8px}#signal{font-size:8px}.brand{font-size:9px}#stage{min-height:360px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="shell">
-<header><div class="brand"><span class="mark"></span><span>FIELD STUDIES&nbsp; / &nbsp;NO. 001</span></div><div class="header-meta"><span class="live">SYSTEM ALIVE</span><span>ARTIFICIAL ECOSYSTEMS LAB</span><span>2026</span></div></header>
-<main>
-<aside class="left">
-<div class="eyebrow">Digital organism / 001</div>
-<h1 class="title">MYCE<span style="color:var(--acid)">L</span>IUM<br><em>_01</em></h1>
-<p class="sub">A synthetic lifeform growing between biological patterns and computational rules.</p>
-<div class="rule"></div>
-<div class="section-label">OBSERVATION MODES</div>
-<nav class="nav">
-<button class="active" data-mode="growth"><span>01</span> GROWTH</button>
-<button data-mode="pulse"><span>02</span> PULSE</button>
-<button data-mode="drift"><span>03</span> DRIFT</button>
-</nav>
-<div class="rule"></div>
-<div class="section-label">FIELD NOTE / 001-A</div>
-<p class="caption">The organism does not reproduce a known species. It searches for a form of its own. <strong>Each interaction leaves a trace.</strong> Click inside the field to introduce a new growth point.</p>
-</aside>
-<section class="center" aria-label="Interactive digital organism">
-<canvas id="world"></canvas>
-<div class="center-top"><span>LIVE CULTURE / IN SILICO</span><span id="mode-label">MODE: GROWTH</span></div>
-<div class="center-bottom"><div class="specimen">Unclassified structure<small>FIG. 01 — INTERACTIVE SPECIMEN</small></div><div class="hint">CLICK TO INOCULATE<br>MOVE TO DISTURB FIELD</div></div>
-<div class="toast" id="toast">NEW GROWTH POINT INTRODUCED</div>
-</section>
-<aside class="right">
-<div class="eyebrow">Environmental controls</div>
-<div class="section-label" style="margin-top:27px">STIMULI</div>
-<div class="control"><div class="control-head"><label for="nutrient">NUTRIENT FLOW</label><output id="nutrient-val">62%</output></div><input id="nutrient" type="range" min="10" max="100" value="62"></div>
-<div class="control"><div class="control-head"><label for="humidity">HUMIDITY</label><output id="humidity-val">78%</output></div><input id="humidity" type="range" min="0" max="100" value="78"></div>
-<div class="control"><div class="control-head"><label for="mutation">MUTATION RATE</label><output id="mutation-val">24%</output></div><input id="mutation" type="range" min="0" max="100" value="24"></div>
-<div class="rule"></div>
-<div class="section-label">VITAL SIGNS</div>
-<div class="readout"><div><b id="branches">128</b><span>BRANCHES</span></div><div><b id="energy">0.82</b><span>ENERGY</span></div><div><b id="age">00:00</b><span>SPECIMEN AGE</span></div><div><b id="nodes">064</b><span>ACTIVE NODES</span></div></div>
-<div class="actions"><button class="action primary" id="regenerate">REGENERATE ↗</button><button class="action" id="sound">SOUND OFF</button></div>
-<div class="rule"></div>
-<p class="caption">An ongoing experiment in <strong>non-human agency</strong>, emergence and the aesthetics of living systems.</p>
-</aside>
+<main id="stage" aria-label="Interactive artificial organism">
+<canvas id="life" aria-label="A luminous, breathing alien organism that responds to touch and pointer movement"></canvas><div id="grain"></div>
+<header><div class="brand">FIELD NOTES / 09<span>UNCLASSIFIED ORGANISM</span></div><div id="signal">LIVE OBSERVATION</div></header>
+<footer><div class="instruction">MOVE CLOSER TO OBSERVE<br>TOUCH THE SPECIMEN TO PROVOKE IT</div><div id="state">DORMANT<small>CONTACT: NONE</small></div></footer>
+<div id="hint" aria-live="polite">IT NOTICED YOU</div>
+<section id="reveal"><div class="intro"><div class="over">BIOLOGICAL ANOMALY / 09</div><h1>UNKNOWN<br><em>LIFEFORM</em></h1><p>It was not designed to be watched.<br>It learned to watch back.</p><button id="enter" type="button">BEGIN OBSERVATION</button></div></section>
 </main>
-<footer><span>INDEPENDENT RESEARCH / SPECULATIVE BIOLOGY</span><div class="foot-right"><span>LAT 00° 00' N</span><span>NO FIXED ORIGIN</span></div></footer>
-</div>
 <script>
 (()=>{
-const canvas=document.getElementById('world'),ctx=canvas.getContext('2d');
-const $=id=>document.getElementById(id);
-let w=0,h=0,dpr=1,branches=[],particles=[],mode='growth',start=Date.now(),mouse={x:-1000,y:-1000},nutrient=62,humidity=78,mutation=24,soundOn=false,audio=null,frame=0;
-const rand=(a,b)=>a+Math.random()*(b-a);
-function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);seed()}
-function seed(){branches=[];particles=[];const cx=w*.5,cy=h*.51;for(let i=0;i<23;i++){const a=i/23*Math.PI*2;grow(cx+Math.cos(a)*rand(2,15),cy+Math.sin(a)*rand(2,15),a,rand(55,105),0)}for(let i=0;i<95;i++)particles.push({x:rand(0,w),y:rand(0,h),r:rand(.5,1.7),p:rand(0,7),s:rand(.08,.35)})}
-function grow(x,y,a,len,depth){if(depth>5||branches.length>1100)return;const bend=rand(-.55,.55)*(mutation/35+.25);branches.push({x,y,a,len,depth,phase:rand(0,7),energy:rand(.5,1.4)});if(depth<4){const n=depth<2?2:Math.random()<.65?2:1;for(let i=0;i<n;i++){const na=a+(i===0?-1:1)*rand(.18,.68)+bend;grow(x+Math.cos(na)*len*.28,y+Math.sin(na)*len*.28,na,len*rand(.57,.77),depth+1)}}}
-function addPoint(x,y){for(let i=0;i<5;i++)grow(x+rand(-4,4),y+rand(-4,4),rand(0,Math.PI*2),rand(50,90),0);$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1400);if(soundOn)tone(440,0.08)}
-function tone(f,d){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.025,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+d)}
-function draw(t){ctx.clearRect(0,0,w,h);const pulse=mode==='pulse'?1+Math.sin(t*.0018)*.15:1;ctx.save();ctx.translate(w/2,h/2);ctx.scale(pulse,pulse);ctx.translate(-w/2,-h/2);
-const glow=ctx.createRadialGradient(w/2,h/2,2,w/2,h/2,Math.min(w,h)*.48);glow.addColorStop(0,'rgba(135,184,83,.10)');glow.addColorStop(1,'rgba(135,184,83,0)');ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
-for(const b of branches){const drift=mode==='drift'?Math.sin(t*.00045+b.phase)*13:Math.sin(t*.0008+b.phase)*2;const len=b.len*(.75+nutrient/200)*Math.min(1,humidity/55+.35);const ex=b.x+Math.cos(b.a)*len+drift,ey=b.y+Math.sin(b.a)*len+drift*.6;const dx=mouse.x-b.x,dy=mouse.y-b.y,dist=Math.hypot(dx,dy);let repel=dist<115?(1-dist/115)*Math.atan2(dy,dx):0;
-ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.quadraticCurveTo(b.x+Math.cos(b.a+repel)*len*.55,b.y+Math.sin(b.a+repel)*len*.55,ex,ey);
-const alpha=Math.max(.09,.55-b.depth*.075)*(.65+Math.sin(t*.001+b.phase)*.18);ctx.strokeStyle=b.depth===0?'rgba(199,243,107,'+alpha+')':'rgba(151,190,116,'+alpha+')';ctx.lineWidth=Math.max(.45,2.2-b.depth*.34);ctx.stroke();
-if(b.depth<3){ctx.beginPath();ctx.arc(ex,ey,b.depth===0?2.1:1.1,0,Math.PI*2);ctx.fillStyle='rgba(215,244,160,'+(alpha*.8)+')';ctx.fill()}
-}
+const canvas=document.getElementById('life'),ctx=canvas.getContext('2d',{alpha:false}),stage=document.getElementById('stage');
+const stateEl=document.getElementById('state'),hint=document.getElementById('hint');
+let w=0,h=0,dpr=1,t=0,last=0,active=false,px=-1000,py=-1000,near=0,aggression=0,energy=0.5,phase=0,spores=[],ribbons=[],pulses=[],touching=false,hintTimer=0;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function resize(){const r=stage.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio||1,1.7);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);seed()}
+function seed(){spores=[];ribbons=[];const cx=w*.5,cy=h*.51,scale=Math.min(w,h);for(let i=0;i<52;i++){const a=rand(0,Math.PI*2),rr=rand(.08,.48)*scale;spores.push({x:cx+Math.cos(a)*rr,y:cy+Math.sin(a)*rr,vx:rand(-.3,.3),vy:rand(-.3,.3),r:rand(1,3.8),life:rand(0,1),seed:rand(0,10)})}for(let i=0;i<9;i++)ribbons.push({a:i/9*Math.PI*2,offset:rand(-.6,.6),speed:rand(.2,.7),len:rand(.65,1.2)})}
+function pointer(e){const r=canvas.getBoundingClientRect();px=e.clientX-r.left;py=e.clientY-r.top;near=1;if(active){aggression=Math.min(1,aggression+.13);if(Math.random()<.12)burst(px,py,8)}}
+function burst(x,y,n){for(let i=0;i<n;i++){const a=rand(0,Math.PI*2),v=rand(.7,3.2);spores.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:rand(1,3),life:1,seed:rand(0,9)})}if(spores.length>180)spores.splice(0,spores.length-180);pulses.push({x,y,r:5,a:1})}
+function interact(e){const r=canvas.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;burst(x,y,24);aggression=1;energy=clamp(energy+.12,0,1);stateEl.innerHTML='DISTURBED<small>CONTACT: DETECTED</small>';hint.classList.add('show');clearTimeout(hintTimer);hintTimer=setTimeout(()=>hint.classList.remove('show'),1600)}
+canvas.addEventListener('pointermove',pointer,{passive:true});canvas.addEventListener('pointerdown',e=>{touching=true;interact(e)},{passive:true});canvas.addEventListener('pointerup',()=>touching=false,{passive:true});canvas.addEventListener('pointerleave',()=>{near=0;px=-1000;py=-1000},{passive:true});
+document.getElementById('enter').addEventListener('click',()=>{active=true;document.getElementById('reveal').classList.add('out');burst(w*.5,h*.5,32);stateEl.innerHTML='AWAKE<small>CONTACT: ESTABLISHED</small>'});
+function drawOrganism(dt){
+const cx=w*.5,cy=h*.5,unit=Math.min(w,h)*.34,threat=clamp(aggression,0,1),breath=1+Math.sin(t*.0011)*.035+Math.sin(t*.00037)*.025;
+const dx=px-cx,dy=py-cy,dist=Math.hypot(dx,dy),approach=clamp(1-dist/(unit*2.4),0,1)*near;
+const leanX=approach*clamp(dx/unit,-.5,.5)*18,leanY=approach*clamp(dy/unit,-.5,.5)*18;
+ctx.save();ctx.translate(cx+leanX,cy+leanY);ctx.rotate(Math.sin(t*.00023)*.035);
+const bodyR=unit*breath*(1+threat*.07);
+// outer translucent membrane
+for(let layer=5;layer>=0;layer--){ctx.beginPath();const n=96,rad=bodyR*(.66+layer*.075);for(let i=0;i<=n;i++){const a=i/n*Math.PI*2;const wave=Math.sin(a*3+t*.0005+layer)*.035+Math.sin(a*7-t*.00031)*.018+Math.sin(a*2+t*.0008)*.025;const rr=rad*(1+wave+Math.sin(a*5+phase)*.018);const x=Math.cos(a)*rr*(1+Math.sin(a*2+t*.0004)*.05),y=Math.sin(a)*rr*(.79+Math.cos(a*3+t*.00025)*.035);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.fillStyle='rgba(50,116,77,'+(.035+layer*.009)+')';ctx.fill();ctx.strokeStyle='rgba(151,236,163,'+(.035+layer*.012)+')';ctx.lineWidth=1;ctx.stroke()}
+const grad=ctx.createRadialGradient(-unit*.22,-unit*.25,unit*.03,0,0,unit);grad.addColorStop(0,'rgba(164,226,164,.19)');grad.addColorStop(.48,'rgba(35,106,71,.15)');grad.addColorStop(1,'rgba(4,19,13,.02)');
+ctx.beginPath();ctx.ellipse(0,0,bodyR*.72,bodyR*.59,Math.sin(t*.0003)*.1,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+// internal veins / tendrils
+ctx.globalCompositeOperation='screen';
+for(let k=0;k<ribbons.length;k++){const q=ribbons[k],a=q.a+Math.sin(t*.00025*q.speed+k)*.16+threat*.12;const reach=unit*q.len*(.78+Math.sin(t*.0004+k)*.12);ctx.beginPath();for(let j=0;j<=44;j++){const f=j/44,spiral=a+f*(1.5+q.offset)+Math.sin(t*.0004+j*.1+k)*.12;const rr=reach*f;const x=Math.cos(spiral)*rr,y=Math.sin(spiral)*rr*.78;if(j===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle=k%3===0?'rgba(182,255,177,.48)':'rgba(91,190,126,.28)';ctx.lineWidth=1+Math.sin(t*.001+k)*.7;ctx.shadowBlur=12;ctx.shadowColor='#8effa1';ctx.stroke()}
+ctx.shadowBlur=0;
+// central sensory eye
+const eyeX=clamp(dx*.055,-unit*.13,unit*.13),eyeY=clamp(dy*.055,-unit*.1,unit*.1);
+ctx.beginPath();ctx.ellipse(0,0,unit*.23,unit*.17,0,0,Math.PI*2);ctx.fillStyle='rgba(2,12,8,.72)';ctx.fill();ctx.strokeStyle='rgba(165,245,169,.45)';ctx.lineWidth=1.2;ctx.stroke();
+const eye=ctx.createRadialGradient(eyeX-unit*.025,eyeY-unit*.025,1,eyeX,eyeY,unit*.105);eye.addColorStop(0,'#e6ffd0');eye.addColorStop(.18,'#9aff9e');eye.addColorStop(.5,'#3eaa72');eye.addColorStop(1,'#092a1b');
+ctx.beginPath();ctx.ellipse(eyeX,eyeY,unit*.09,unit*.115,0,0,Math.PI*2);ctx.fillStyle=eye;ctx.shadowBlur=24;ctx.shadowColor='#9cff9e';ctx.fill();ctx.shadowBlur=0;
+ctx.beginPath();ctx.arc(eyeX,eyeY,unit*.032,0,Math.PI*2);ctx.fillStyle='#03110a';ctx.fill();
 ctx.restore();
-for(const p of particles){p.y-=p.s*(.3+nutrient/90);if(p.y<0)p.y=h;let dx=p.x-mouse.x,dy=p.y-mouse.y,d=Math.hypot(dx,dy);ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=d<90?'rgba(199,243,107,.65)':'rgba(174,193,151,.22)';ctx.fill()}
-frame++;if(frame%30===0){$('branches').textContent=branches.length;$('nodes').textContent=String(Math.round(branches.length*.51)).padStart(3,'0');$('energy').textContent=(.35+nutrient/180+Math.sin(t*.0004)*.06).toFixed(2);const sec=Math.floor((Date.now()-start)/1000);$('age').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')}
-requestAnimationFrame(draw)}
-canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
-canvas.addEventListener('pointerleave',()=>{mouse.x=-1000;mouse.y=-1000});
-canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect();addPoint(e.clientX-r.left,e.clientY-r.top)});
-document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-mode]').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.mode;$('mode-label').textContent='MODE: '+mode.toUpperCase()}));
-[['nutrient','nutrient-val'],['humidity','humidity-val'],['mutation','mutation-val']].forEach(([id,out])=>$(id).addEventListener('input',e=>{$(out).textContent=e.target.value+'%';if(id==='nutrient')nutrient=+e.target.value;if(id==='humidity')humidity=+e.target.value;if(id==='mutation')mutation=+e.target.value}));
-$('regenerate').addEventListener('click',()=>{start=Date.now();seed();if(soundOn)tone(330,.2)});
-$('sound').addEventListener('click',()=>{soundOn=!soundOn;if(soundOn){audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume()}$('sound').textContent=soundOn?'SOUND ON':'SOUND OFF';if(soundOn)tone(520,.15)});
-window.addEventListener('resize',resize);resize();requestAnimationFrame(draw);
+}
+function frame(now){if(!active&&!reduced){requestAnimationFrame(frame);return}const dt=Math.min(32,now-(last||now));last=now;t+=dt;
+ctx.fillStyle='rgba(4,9,7,.24)';ctx.fillRect(0,0,w,h);
+const cx=w*.5,cy=h*.51,unit=Math.min(w,h)*.34;
+drawOrganism(dt);
+for(let i=spores.length-1;i>=0;i--){const p=spores[i];const dx=px-p.x,dy=py-p.y,d=Math.hypot(dx,dy)||1;const attract=near&&d<unit*1.6?(1-d/(unit*1.6))*.012:0;p.vx+=(-p.x+cx)*.000012+dx/d*attract+Math.sin(t*.0005+p.seed)*.006;p.vy+=(-p.y+cy)*.000012+dy/d*attract+Math.cos(t*.0006+p.seed)*.006;p.vx*=.992;p.vy*=.992;p.x+=p.vx*dt*.055;p.y+=p.vy*dt*.055;p.life-=dt*.000025;if(p.life<=0){spores.splice(i,1);continue}ctx.beginPath();ctx.arc(p.x,p.y,p.r*(.6+p.life*.5),0,Math.PI*2);ctx.fillStyle='rgba(168,255,172,'+(.15+p.life*.55)+')';ctx.shadowBlur=9;ctx.shadowColor='#9bff9e';ctx.fill();ctx.shadowBlur=0}
+for(let i=pulses.length-1;i>=0;i--){const p=pulses[i];p.r+=dt*.09;p.a-=dt*.00065;if(p.a<=0){pulses.splice(i,1);continue}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.strokeStyle='rgba(164,255,172,'+p.a*.45+')';ctx.lineWidth=1;ctx.stroke()}
+aggression*=Math.pow(.994,dt/16);if(!near){energy+=(.48-energy)*.001}phase+=dt*.0003;
+if(active&&Math.random()<.012&&spores.length<95){const a=rand(0,Math.PI*2);burst(cx+Math.cos(a)*unit*.65,cy+Math.sin(a)*unit*.5,1)}
+if(active&&Math.random()<.0018){stateEl.innerHTML=(aggression>.3?'ALERT':'OBSERVING')+'<small>CONTACT: '+(near?'TRACKED':'NONE')+'</small>'}
+if(!reduced)requestAnimationFrame(frame);else{ctx.fillStyle='rgba(4,9,7,.24)';ctx.fillRect(0,0,w,h);drawOrganism(16)}}
+new ResizeObserver(resize).observe(stage);resize();
+ctx.fillStyle='#050807';ctx.fillRect(0,0,w,h);
+requestAnimationFrame(frame);
 })();
 </script>
-</body></html>
+</body>
+</html>
